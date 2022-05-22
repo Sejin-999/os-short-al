@@ -75,7 +75,7 @@ void p_srt(process* p, int n) {
 	// 남은 프로세스, 서비스 시간, 반복문 i
 	int remain, sv_time, i;
 	*/
-	int remain, min, now_p, i, temp[150];
+	int remain, min, now_p, i;
 	int now = 0;
 
 	now_p = 0;
@@ -119,6 +119,11 @@ void p_srt(process* p, int n) {
 	}
 }
 
+void SRT(process* p, int n) {
+	p_sort(g_process, n);
+	p_srt(g_process, n);
+	p_resort(g_process, n);
+}
 
 //fcfs 정렬_순차정렬
 int fcfs_sort(process* a, process* b)
@@ -291,15 +296,16 @@ int main()
 	puts("===============================================");
 
 
-	printf("\n<RR 스케줄링>\n\n");
+	//printf("\n<RR 스케줄링>\n\n");
+	printf("\n<SRT 스케줄링>\n\n");
 	printf("프로세스 id\t 도착시간\t 서비스 시간\t 종료 시간\t 반환 시간\t 정규화된 반환 시간\n");
 	printf("=======================================================================================================\n");
 
 	// SRT는 이 부분만 실행시켜주면 됨.
 	//----------------------------
-	p_sort(g_process, count);
-	p_srt(g_process, count);
-	p_resort(g_process, count);
+	
+	SRT(g_process, count);
+	
 	//----------------------------
 	 
 	//RR(count, copy_sys);
