@@ -21,6 +21,7 @@ typedef struct process {
 	int end_time; //종료시간
 	int put; //프로세스 실행 판단 변수(0or1)
 	int end_point;
+	int recoverycnt;
 } process;
 
 process g_process[MAX_PROCESS];
@@ -53,11 +54,66 @@ void RR(int cnt, process s[]) { //프로세스 개수 cnt
 		
 
 			if (g_process[i].remain_time > 0 &&g_process[i].ar_t <= time) {
-				printf("========ID : %d========\n",g_process[i].pid);
-				printf("수행전 남아있는 시간 %d\n",g_process[i].remain_time);
-				g_process[i].remain_time -= 1;
-				printf("수행후 남아있는 시간 %d\n", g_process[i].remain_time);
-				time++;
+				if (g_process[i].pid == 2 || g_process[i].pid == 4) {
+					if (time >5 && time<19) {
+						printf("야\n");
+						
+						//4 start
+						 if (g_process[i].pid == 4) {
+							if (g_process[1].remain_time == 0 && (g_process[1].end_point == 1)) {
+								g_process[1].end_time = time;
+								g_process[1].end_point = 0;
+								end_cnt -= 1;
+								printf("1번완료");
+							}
+							else {
+								printf("========ID : %d========\n", g_process[1].pid);
+								g_process[1].remain_time -= 1;
+								printf("수행후 남아있는 시간 ㄴ %d\n", g_process[1].remain_time);
+								time++;
+								if (g_process[1].remain_time < 0) {
+									printf("회복");
+									g_process[i].recoverycnt += 1;
+								}
+							}
+						}
+						//4 end
+						//2 start
+						 else if ((g_process[i].pid == 2)) {
+							if (g_process[3].remain_time == 0 && (g_process[3].end_point == 1)) {
+								g_process[3].end_time = time;
+								g_process[3].end_point = 0;
+								end_cnt -= 1;
+								printf("4번완료");
+							}
+							else {
+								printf("========ID : %d========\n", g_process[3].pid);
+								g_process[3].remain_time -= 1;
+								printf("수행후 남아있는 시간 %d\n", g_process[3].remain_time);
+								time++;
+							}
+						}
+					//2end
+
+					}
+					else {
+						printf("========ID : %d========\n", g_process[i].pid);
+						printf("수행전 남아있는 시간 %d\n", g_process[i].remain_time);
+						g_process[i].remain_time -= 1;
+						printf("수행후 남아있는 시간 %d\n", g_process[i].remain_time);
+						time++;
+					}
+
+				}
+				else {
+					printf("========ID : %d========\n", g_process[i].pid);
+					printf("수행전 남아있는 시간 %d\n", g_process[i].remain_time);
+					g_process[i].remain_time -= 1;
+					printf("수행후 남아있는 시간 %d\n", g_process[i].remain_time);
+					time++;
+				}
+
+				
 
 				/*ch*/
 				if ((g_process[i].remain_time == 0) && (g_process[i].end_point == 1)) {
@@ -78,6 +134,13 @@ void RR(int cnt, process s[]) { //프로세스 개수 cnt
 		}
 
 	}
+
+	for (i = 0; i < cnt; i++) {
+		if (g_process[i].recoverycnt > 0) {
+			g_process[i].end_time = g_process[i].end_time - g_process[i].recoverycnt;
+		}
+	}
+
 	for (i = 0; i < cnt; i++) {
 		printf("%5d%15d%17d%15d%15d \n", g_process[i].pid, g_process[i].ar_t, g_process[i].ser_t,
 		g_process[i].end_time , g_process[i].end_time-g_process[i].ar_t);
