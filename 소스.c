@@ -33,10 +33,10 @@ int pr_cnt = -1; //프로세스 현재 번호
 //RR 알고리즘
 void RR(int cnt, process s[]) { //프로세스 개수 cnt
 	//printf("%d \n",g_process[1].remain_time);
-	
-	int t = 0, i =0 , end_cnt;
+
+	int t = 0, i = 0, end_cnt;
 	int flag = 1;
-	int time_q = 1, time = 0 ,q = 1 ;
+	int time_q = 1, time = 0, q = 1;
 
 	int exit = 0; //종료 프로세스 개수
 	int average_wait = 0;
@@ -50,74 +50,74 @@ void RR(int cnt, process s[]) { //프로세스 개수 cnt
 
 	while (flag) {
 		for (i = 0; i < cnt; i++) {
-			printf("\n_______service Time : %d_________\n\n",time+1); // 삭제
-		
+			//printf("\n_______service Time : %d_________\n\n", time + 1); // 삭제
 
-			if (g_process[i].remain_time > 0 &&g_process[i].ar_t <= time) {
-				if (g_process[i].pid == 2 || g_process[i].pid == 4) {
-					if (time >5 && time<19) {
-						printf("야\n");
-						
+
+			if (g_process[i].remain_time > 0 && g_process[i].ar_t <= time) {
+				if (g_process[i].pid == 2 || g_process[i].pid == 4) { //2.4 번 Process 순서 교체 알고리즘 Start
+					if (time > 5 && time < 19) {
 						//4 start
-						 if (g_process[i].pid == 4) {
+						if (g_process[i].pid == 4) {
 							if (g_process[1].remain_time == 0 && (g_process[1].end_point == 1)) {
 								g_process[1].end_time = time;
 								g_process[1].end_point = 0;
 								end_cnt -= 1;
-								printf("1번완료");
+								//printf("1번완료");
 							}
 							else {
-								printf("========ID : %d========\n", g_process[1].pid);
+								//printf("========ID : %d========\n", g_process[1].pid);
 								g_process[1].remain_time -= 1;
-								printf("수행후 남아있는 시간 ㄴ %d\n", g_process[1].remain_time);
+								//printf("수행후 남아있는 시간  %d\n", g_process[1].remain_time);
 								time++;
-								if (g_process[1].remain_time < 0) {
-									printf("회복");
+								if (g_process[1].remain_time < 0) { //회복
 									g_process[i].recoverycnt += 1;
 								}
 							}
 						}
 						//4 end
 						//2 start
-						 else if ((g_process[i].pid == 2)) {
+						else if ((g_process[i].pid == 2)) {
 							if (g_process[3].remain_time == 0 && (g_process[3].end_point == 1)) {
 								g_process[3].end_time = time;
 								g_process[3].end_point = 0;
 								end_cnt -= 1;
-								printf("4번완료");
+								//printf("4번완료");
 							}
 							else {
-								printf("========ID : %d========\n", g_process[3].pid);
+								//printf("========ID : %d========\n", g_process[3].pid);
 								g_process[3].remain_time -= 1;
-								printf("수행후 남아있는 시간 %d\n", g_process[3].remain_time);
+								//printf("수행후 남아있는 시간 %d\n", g_process[3].remain_time);
 								time++;
+								if (g_process[3].remain_time < 0) { // 회복
+									g_process[i].recoverycnt += 1;
+								}
 							}
 						}
-					//2end
+						//2end
 
-					}
+					} //2.4 번 Process 순서 교체 알고리즘 End
 					else {
-						printf("========ID : %d========\n", g_process[i].pid);
-						printf("수행전 남아있는 시간 %d\n", g_process[i].remain_time);
+						//printf("========ID : %d========\n", g_process[i].pid);
+						//printf("수행전 남아있는 시간 %d\n", g_process[i].remain_time);
 						g_process[i].remain_time -= 1;
-						printf("수행후 남아있는 시간 %d\n", g_process[i].remain_time);
+						//printf("수행후 남아있는 시간 %d\n", g_process[i].remain_time);
 						time++;
 					}
 
 				}
 				else {
-					printf("========ID : %d========\n", g_process[i].pid);
-					printf("수행전 남아있는 시간 %d\n", g_process[i].remain_time);
+					//printf("========ID : %d========\n", g_process[i].pid);
+					//printf("수행전 남아있는 시간 %d\n", g_process[i].remain_time);
 					g_process[i].remain_time -= 1;
-					printf("수행후 남아있는 시간 %d\n", g_process[i].remain_time);
+					//printf("수행후 남아있는 시간 %d\n", g_process[i].remain_time);
 					time++;
 				}
 
-				
 
-				/*ch*/
+
+				/*check end Point*/
 				if ((g_process[i].remain_time == 0) && (g_process[i].end_point == 1)) {
-					printf("Process ID : %d 완료\n", g_process[i].pid);
+					//printf("Process ID : %d 완료\n", g_process[i].pid);
 					g_process[i].end_time = time;
 					g_process[i].end_point = 0;
 					end_cnt -= 1;
@@ -142,12 +142,9 @@ void RR(int cnt, process s[]) { //프로세스 개수 cnt
 	}
 
 	for (i = 0; i < cnt; i++) {
-		printf("%5d%15d%17d%15d%15d \n", g_process[i].pid, g_process[i].ar_t, g_process[i].ser_t,
-		g_process[i].end_time , g_process[i].end_time-g_process[i].ar_t);
+		printf("%5d%15d%17d%15d%15d%15d \n", g_process[i].pid, g_process[i].ar_t, g_process[i].ser_t,
+			g_process[i].end_time, g_process[i].end_time - g_process[i].ar_t, (time + 1 - g_process[i].ar_t));
 	}
-
-	printf("\n평균 대기시간: %d\n", average_wait / cnt);
-	printf("\n평균 반환시간: %.2f\n", average_banhwan / cnt);
 }
 int main()
 {
